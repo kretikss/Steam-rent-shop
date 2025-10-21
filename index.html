@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎮 Steam Аккаунты | Аренда игр</title>
+    <title>🎮 Steam Аренда | Моментальный доступ</title>
     <style>
         * {
             margin: 0;
@@ -21,7 +21,7 @@
         }
         
         .container {
-            max-width: 600px;
+            max-width: 500px;
             margin: 0 auto;
         }
         
@@ -31,91 +31,68 @@
             padding: 20px;
             background: rgba(255,255,255,0.1);
             border-radius: 15px;
-            backdrop-filter: blur(10px);
         }
         
         h1 {
-            font-size: 2.2em;
+            font-size: 2em;
             margin-bottom: 10px;
             background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
         
-        .subtitle {
-            color: #ccc;
-            font-size: 1em;
-        }
-        
-        .account-card {
+        .login-form {
             background: rgba(255,255,255,0.1);
-            border-radius: 15px;
             padding: 25px;
-            margin-bottom: 25px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 15px;
+            margin-bottom: 20px;
         }
         
-        .account-card h3 {
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
             color: #4ecdc4;
-            margin-bottom: 20px;
-            font-size: 1.5em;
-            text-align: center;
         }
         
-        .game-list {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        
-        .game-item {
-            background: rgba(255,255,255,0.05);
-            padding: 8px 12px;
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: none;
             border-radius: 8px;
-            font-size: 0.9em;
-            text-align: center;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
         }
         
-        .price {
-            font-size: 2em;
-            color: #ff6b6b;
-            text-align: center;
-            margin: 20px 0;
-            font-weight: bold;
-        }
-        
-        .rent-btn {
+        .submit-btn {
             background: linear-gradient(45deg, #ff6b6b, #ee5a52);
             color: white;
             border: none;
-            padding: 15px 40px;
+            padding: 15px;
             border-radius: 25px;
             font-size: 1.1em;
             cursor: pointer;
             width: 100%;
-            transition: all 0.3s ease;
             font-weight: bold;
         }
         
-        .rent-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 20px rgba(255,107,107,0.4);
-        }
-        
-        .instructions {
+        .account-info {
             background: rgba(255,255,255,0.1);
-            padding: 20px;
+            padding: 25px;
             border-radius: 15px;
-            margin-top: 20px;
-            font-size: 0.9em;
+            display: none;
         }
         
-        .instructions h3 {
-            color: #4ecdc4;
-            margin-bottom: 15px;
-            text-align: center;
+        .credentials {
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-family: monospace;
         }
         
         .warning {
@@ -124,13 +101,13 @@
             padding: 15px;
             border-radius: 10px;
             margin: 15px 0;
-            font-size: 0.85em;
+            font-size: 0.9em;
         }
         
         .contact {
             text-align: center;
-            margin-top: 25px;
-            padding: 20px;
+            margin-top: 20px;
+            padding: 15px;
             background: rgba(255,255,255,0.1);
             border-radius: 15px;
         }
@@ -139,33 +116,6 @@
             color: #0088cc;
             text-decoration: none;
             font-weight: bold;
-            font-size: 1.1em;
-        }
-        
-        .status {
-            display: inline-block;
-            padding: 5px 15px;
-            background: #27ae60;
-            border-radius: 20px;
-            font-size: 0.8em;
-            margin-left: 10px;
-        }
-        
-        .features {
-            display: flex;
-            justify-content: space-around;
-            margin: 15px 0;
-            font-size: 0.9em;
-        }
-        
-        .feature {
-            text-align: center;
-            padding: 10px;
-        }
-        
-        .feature-icon {
-            font-size: 1.5em;
-            margin-bottom: 5px;
         }
     </style>
 </head>
@@ -173,93 +123,98 @@
     <div class="container">
         <header>
             <h1>🎮 Steam Аренда</h1>
-            <p class="subtitle">Аккаунты с играми • Без привязок • Моментальная выдача</p>
+            <p>Автоматическая выдача • Моментальный доступ</p>
         </header>
         
-        <div class="account-card">
-            <h3>🔥 PREMIUM ИГРОВОЙ ПАК <span class="status">СВОБОДЕН</span></h3>
-            
-            <div class="features">
-                <div class="feature">
-                    <div class="feature-icon">🎯</div>
-                    <div>7 топ-игр</div>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon">🔑</div>
-                    <div>Логин/Пароль</div>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon">⚡</div>
-                    <div>Моментально</div>
-                </div>
+        <div class="login-form" id="loginForm">
+            <h3>🔐 Введите данные для доступа</h3>
+            <div class="form-group">
+                <label>Ваш уникальный ID (любые буквы/цифры):</label>
+                <input type="text" id="userID" placeholder="Например: gamer123" required>
             </div>
-            
-            <div class="game-list">
-                <div class="game-item">Crysis Remastered Trilogy</div>
-                <div class="game-item">Mafia Definitive Trilogy</div>
-                <div class="game-item">Tomb Raider (2013)</div>
-                <div class="game-item">Undertale</div>
-                <div class="game-item">Postal 1</div>
-                <div class="game-item">Postal 2</div>
+            <div class="form-group">
+                <label>Кодовое слово (запомните для входа):</label>
+                <input type="password" id="userCode" placeholder="Придумайте пароль" required>
             </div>
-            
-            <div class="price">100₽ / день</div>
-            
-            <button class="rent-btn" onclick="rentAccount()">АРЕНДОВАТЬ СЕЙЧАС</button>
+            <button class="submit-btn" onclick="generateAccount()">ПОЛУЧИТЬ ДОСТУП</button>
         </div>
         
-        <div class="instructions">
-            <h3>📋 КАК ПОЛУЧИТЬ ДОСТУП</h3>
-            <p>1. Нажимаешь "Арендовать сейчас"</p>
-            <p>2. Пишешь мне в Telegram: <a href="https://t.me/AndraiRahmanin" class="telegram-link">@AndraiRahmanin</a></p>
-            <p>3. Получаешь логин и пароль в ответном сообщении</p>
-            <p>4. Играешь! 🎮</p>
-        </div>
-        
-        <div class="warning">
-            <strong>⚠️ ВАЖНО:</strong> Используйте только офлайн-режим!<br>
-            При входе онлайн сохранения могут слететь. <br>
-            За невыполнение инструкций деньги не возвращаются.
+        <div class="account-info" id="accountInfo">
+            <h3>✅ ДОСТУП АКТИВИРОВАН</h3>
+            <p>Ваш ID: <strong id="displayID"></strong></p>
+            
+            <div class="credentials">
+                <strong>Steam Аккаунт:</strong><br>
+                Логин: <strong>kretikss_gamer01</strong><br>
+                Пароль: <strong>steam2024access</strong>
+            </div>
+            
+            <div class="warning">
+                ⚠️ <strong>ВНИМАНИЕ:</strong><br>
+                • Используйте ТОЛЬКО офлайн-режим!<br>
+                • Не меняйте данные аккаунта<br>
+                • Для повторного входа используйте ваш ID и кодовое слово
+            </div>
+            
+            <button class="submit-btn" onclick="resetForm()">ВЫЙТИ</button>
         </div>
         
         <div class="contact">
-            <h3>💬 СВЯЗЬ С ПОДДЕРЖКОЙ</h3>
-            <p>Telegram: 
-                <a href="https://t.me/AndraiRahmanin" class="telegram-link" target="_blank">@AndraiRahmanin</a>
-            </p>
-            <p>Отвечаю быстро 🚀</p>
+            <p>По вопросам: <a href="https://t.me/AndraiRahmanin" class="telegram-link">@AndraiRahmanin</a></p>
         </div>
     </div>
 
     <script>
-        function rentAccount() {
-            // Открываем Telegram
-            window.open('https://t.me/AndraiRahmanin', '_blank');
+        // База "аккаунтов" - в реальности можно расширить
+        const accounts = [
+            { login: "kretikss_gamer01", password: "steam2024access" },
+            { login: "kretikss_gamer02", password: "steam2024access2" },
+            { login: "kretikss_gamer03", password: "steam2024access3" }
+        ];
+        
+        function generateAccount() {
+            const userID = document.getElementById('userID').value;
+            const userCode = document.getElementById('userCode').value;
             
-            // Показываем сообщение
-            alert('🎮 Отлично! Теперь напиши мне в Telegram: @AndraiRahmanin\n\nЯ отвечу в течение 5 минут с данными аккаунта!');
-            
-            // Для Web App в Telegram
-            if (window.Telegram && window.Telegram.WebApp) {
-                window.Telegram.WebApp.sendData(JSON.stringify({
-                    action: 'rent',
-                    package: 'premium_games'
-                }));
+            if (!userID || !userCode) {
+                alert('Заполните все поля!');
+                return;
             }
+            
+            // Сохраняем в localStorage
+            localStorage.setItem('steamUserID', userID);
+            localStorage.setItem('steamUserCode', userCode);
+            
+            // Выбираем случайный аккаунт из доступных
+            const randomAccount = accounts[Math.floor(Math.random() * accounts.length)];
+            
+            // Показываем данные
+            document.getElementById('displayID').textContent = userID;
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('accountInfo').style.display = 'block';
+            
+            // В реальном проекте здесь была бы выдача разных аккаунтов
+            document.querySelector('.credentials').innerHTML = `
+                <strong>Steam Аккаунт:</strong><br>
+                Логин: <strong>${randomAccount.login}</strong><br>
+                Пароль: <strong>${randomAccount.password}</strong>
+            `;
         }
         
-        // Анимация при загрузке
-        document.addEventListener('DOMContentLoaded', function() {
-            const card = document.querySelector('.account-card');
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
-            
-            setTimeout(() => {
-                card.style.transition = 'all 0.5s ease';
-                card.style.opacity = '1';
-                card.style.transform = 'translateY(0)';
-            }, 300);
-        });
+        function resetForm() {
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('accountInfo').style.display = 'none';
+            document.getElementById('userID').value = '';
+            document.getElementById('userCode').value = '';
+        }
+        
+        // Проверяем, может пользователь уже авторизован
+        window.onload = function() {
+            const savedID = localStorage.getItem('steamUserID');
+            if (savedID) {
+                document.getElementById('userID').value = savedID;
+            }
+        }
     </script>
 </body>
 </html>
