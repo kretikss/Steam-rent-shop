@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎮 Steam Аренда | Платформа</title>
+    <title>🎮 Steam Аренда | Автоматическая выдача</title>
     <style>
         * {
             margin: 0;
@@ -41,7 +41,6 @@
             -webkit-text-fill-color: transparent;
         }
         
-        /* Формы */
         .form-container {
             background: rgba(255,255,255,0.1);
             padding: 25px;
@@ -86,83 +85,19 @@
             background: rgba(255,255,255,0.2);
         }
         
-        /* Чат */
-        .chat-container {
+        .account-info {
             background: rgba(255,255,255,0.1);
+            padding: 25px;
             border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
             display: none;
         }
         
-        .chat-messages {
-            height: 200px;
-            overflow-y: auto;
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 10px;
-            padding: 10px;
-            margin-bottom: 10px;
+        .credentials {
             background: rgba(0,0,0,0.3);
-        }
-        
-        .message {
-            margin-bottom: 10px;
-            padding: 8px;
-            border-radius: 8px;
-            background: rgba(255,255,255,0.1);
-        }
-        
-        .message.admin {
-            background: rgba(255,107,107,0.3);
-            border-left: 3px solid #ff6b6b;
-        }
-        
-        .message.user {
-            background: rgba(78,205,196,0.3);
-            border-left: 3px solid #4ecdc4;
-        }
-        
-        .message-sender {
-            font-weight: bold;
-            color: #4ecdc4;
-        }
-        
-        .message.admin .message-sender {
-            color: #ff6b6b;
-        }
-        
-        /* Админ панель */
-        .admin-panel {
-            background: rgba(255,107,107,0.2);
-            border: 1px solid #ff6b6b;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-            display: none;
-        }
-        
-        .user-list {
-            margin: 10px 0;
-        }
-        
-        .user-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px;
-            margin: 5px 0;
-            background: rgba(255,255,255,0.1);
-            border-radius: 8px;
-        }
-        
-        .ban-btn {
-            background: #e74c3c;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.8em;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-family: monospace;
         }
         
         .warning {
@@ -174,8 +109,28 @@
             font-size: 0.9em;
         }
         
+        .contact {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+        }
+        
+        .telegram-link {
+            color: #0088cc;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
         .error {
             color: #ff6b6b;
+            text-align: center;
+            margin: 10px 0;
+        }
+        
+        .success {
+            color: #4ecdc4;
             text-align: center;
             margin: 10px 0;
         }
@@ -185,7 +140,7 @@
     <div class="container">
         <header>
             <h1>🎮 Steam Аренда</h1>
-            <p>Платформа с чатом и регистрацией</p>
+            <p>Автоматическая выдача • Моментальный доступ</p>
         </header>
         
         <!-- Форма регистрации -->
@@ -193,19 +148,20 @@
             <h3>📝 Регистрация</h3>
             <div class="form-group">
                 <label>Выберите никнейм:</label>
-                <input type="text" id="username" placeholder="Только английские буквы и цифры" pattern="[A-Za-z0-9]+" required>
+                <input type="text" id="username" placeholder="Только английские буквы и цифры" required>
             </div>
             <div class="form-group">
                 <label>Пароль:</label>
-                <input type="password" id="password" placeholder="Минимум 4 символа" minlength="4" required>
+                <input type="password" id="password" placeholder="Минимум 4 символа" required>
             </div>
             <button class="btn" onclick="register()">ЗАРЕГИСТРИРОВАТЬСЯ</button>
+            <button class="btn btn-secondary" onclick="showLogin()">УЖЕ ЕСТЬ АККАУНТ</button>
             <div class="error" id="registerError"></div>
         </div>
         
         <!-- Форма входа -->
         <div class="form-container" id="loginForm" style="display: none;">
-            <h3>🔐 Вход в систему</h3>
+            <h3>🔐 Вход в аккаунт</h3>
             <div class="form-group">
                 <label>Ваш никнейм:</label>
                 <input type="text" id="loginUsername" required>
@@ -214,57 +170,50 @@
                 <label>Пароль:</label>
                 <input type="password" id="loginPassword" required>
             </div>
-            <button class="btn" onclick="login()">ВОЙТИ</button>
-            <button class="btn btn-secondary" onclick="showRegister()">НАЗАД К РЕГИСТРАЦИИ</button>
+            <button class="btn" onclick="login()">ВОЙТИ В АККАУНТ</button>
+            <button class="btn btn-secondary" onclick="showRegister()">СОЗДАТЬ АККАУНТ</button>
             <div class="error" id="loginError"></div>
         </div>
         
-        <!-- Админ панель -->
-        <div class="admin-panel" id="adminPanel">
-            <h3>⚙️ АДМИН ПАНЕЛЬ</h3>
-            <div class="user-list" id="userList">
-                <!-- Список пользователей будет здесь -->
-            </div>
-        </div>
-        
-        <!-- Чат -->
-        <div class="chat-container" id="chatContainer">
-            <h3>💬 Общий чат</h3>
-            <div class="chat-messages" id="chatMessages">
-                <!-- Сообщения будут здесь -->
-            </div>
-            <div class="form-group">
-                <input type="text" id="messageInput" placeholder="Введите сообщение...">
-            </div>
-            <button class="btn" onclick="sendMessage()">ОТПРАВИТЬ</button>
-        </div>
-        
         <!-- Информация об аккаунте -->
-        <div class="form-container" id="accountInfo" style="display: none;">
-            <h3>✅ ВАШ АККАУНТ</h3>
+        <div class="account-info" id="accountInfo">
+            <h3>✅ ВАШ ДОСТУП АКТИВИРОВАН</h3>
             <p>Добро пожаловать, <strong id="welcomeUser"></strong>!</p>
-            <button class="btn" onclick="logout()">ВЫЙТИ</button>
+            
+            <div class="credentials">
+                <strong>Steam Аккаунт:</strong><br>
+                Логин: <strong id="accountLogin"></strong><br>
+                Пароль: <strong id="accountPassword"></strong>
+            </div>
+            
+            <div class="warning">
+                ⚠️ <strong>ВНИМАНИЕ:</strong><br>
+                • Используйте ТОЛЬКО офлайн-режим!<br>
+                • Не меняйте данные аккаунта<br>
+                • Для повторного входа используйте ваш никнейм и пароль
+            </div>
+            
+            <button class="btn" onclick="logout()">ВЫЙТИ ИЗ АККАУНТА</button>
+        </div>
+        
+        <div class="contact">
+            <p>По вопросам: <a href="https://t.me/AndraiRahmanin" class="telegram-link">@AndraiRahmanin</a></p>
         </div>
     </div>
 
     <script>
-        // База данных пользователей (в localStorage)
+        // База данных пользователей
         let users = JSON.parse(localStorage.getItem('steamUsers')) || {};
         let currentUser = null;
-        let messages = JSON.parse(localStorage.getItem('chatMessages')) || [];
         
-        // Админ пользователь (kretiks)
-        const ADMIN_USERNAME = 'kretiks';
-        
-        // Проверяем существование админа
-        if (!users[ADMIN_USERNAME]) {
-            users[ADMIN_USERNAME] = {
-                password: 'admin123',
-                isAdmin: true,
-                banned: false
-            };
-            localStorage.setItem('steamUsers', JSON.stringify(users));
-        }
+        // Доступные Steam аккаунты
+        const steamAccounts = [
+            { login: "gamer_pro_001", password: "steam2024pass1" },
+            { login: "game_lover_002", password: "steam2024pass2" },
+            { login: "player_elite_003", password: "steam2024pass3" },
+            { login: "stream_game_004", password: "steam2024pass4" },
+            { login: "fun_play_005", password: "steam2024pass5" }
+        ];
         
         function register() {
             const username = document.getElementById('username').value;
@@ -284,14 +233,11 @@
             // Регистрируем нового пользователя
             users[username] = {
                 password: password,
-                isAdmin: false,
-                banned: false
+                steamAccount: getRandomSteamAccount()
             };
             
             localStorage.setItem('steamUsers', JSON.stringify(users));
-            errorElement.textContent = '';
-            alert('Регистрация успешна! Теперь войдите в систему.');
-            showLogin();
+            loginUser(username);
         }
         
         function login() {
@@ -304,35 +250,27 @@
                 return;
             }
             
-            if (users[username].banned) {
-                errorElement.textContent = 'Ваш аккаунт заблокирован!';
-                return;
-            }
-            
             if (users[username].password !== password) {
                 errorElement.textContent = 'Неверный пароль!';
                 return;
             }
             
-            // Успешный вход
-            currentUser = username;
             errorElement.textContent = '';
+            loginUser(username);
+        }
+        
+        function loginUser(username) {
+            currentUser = username;
+            const user = users[username];
             
-            // Показываем интерфейс пользователя
+            // Показываем данные аккаунта
             document.getElementById('registerForm').style.display = 'none';
             document.getElementById('loginForm').style.display = 'none';
             document.getElementById('accountInfo').style.display = 'block';
-            document.getElementById('chatContainer').style.display = 'block';
+            
             document.getElementById('welcomeUser').textContent = username;
-            
-            // Если это админ - показываем админ панель
-            if (users[username].isAdmin) {
-                document.getElementById('adminPanel').style.display = 'block';
-                updateUserList();
-            }
-            
-            // Загружаем сообщения чата
-            loadChatMessages();
+            document.getElementById('accountLogin').textContent = user.steamAccount.login;
+            document.getElementById('accountPassword').textContent = user.steamAccount.password;
         }
         
         function showLogin() {
@@ -348,98 +286,28 @@
         function logout() {
             currentUser = null;
             document.getElementById('accountInfo').style.display = 'none';
-            document.getElementById('chatContainer').style.display = 'none';
-            document.getElementById('adminPanel').style.display = 'none';
             document.getElementById('registerForm').style.display = 'block';
+            
+            // Очищаем поля
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('loginUsername').value = '';
+            document.getElementById('loginPassword').value = '';
         }
         
-        // Админ функции
-        function updateUserList() {
-            const userList = document.getElementById('userList');
-            userList.innerHTML = '';
-            
-            for (const username in users) {
-                if (username === ADMIN_USERNAME) continue;
-                
-                const userItem = document.createElement('div');
-                userItem.className = 'user-item';
-                userItem.innerHTML = `
-                    <span>${username} ${users[username].banned ? '🔴 ЗАБАНЕН' : '🟢 АКТИВЕН'}</span>
-                    <button class="ban-btn" onclick="toggleBan('${username}')">
-                        ${users[username].banned ? 'РАЗБАНИТЬ' : 'ЗАБАНИТЬ'}
-                    </button>
-                `;
-                userList.appendChild(userItem);
-            }
+        function getRandomSteamAccount() {
+            // Выдаем случайный аккаунт из доступных
+            return steamAccounts[Math.floor(Math.random() * steamAccounts.length)];
         }
-        
-        function toggleBan(username) {
-            if (currentUser !== ADMIN_USERNAME) return;
-            
-            users[username].banned = !users[username].banned;
-            localStorage.setItem('steamUsers', JSON.stringify(users));
-            updateUserList();
-            alert(`Пользователь ${username} ${users[username].banned ? 'забанен' : 'разбанен'}!`);
-        }
-        
-        // Чат функции
-        function sendMessage() {
-            if (!currentUser) return;
-            
-            const messageInput = document.getElementById('messageInput');
-            const message = messageInput.value.trim();
-            
-            if (!message) return;
-            
-            // Добавляем сообщение
-            messages.push({
-                user: currentUser,
-                text: message,
-                timestamp: new Date().toLocaleTimeString(),
-                isAdmin: users[currentUser].isAdmin
-            });
-            
-            // Сохраняем в localStorage
-            localStorage.setItem('chatMessages', JSON.stringify(messages));
-            
-            // Обновляем чат
-            loadChatMessages();
-            messageInput.value = '';
-        }
-        
-        function loadChatMessages() {
-            const chatMessages = document.getElementById('chatMessages');
-            chatMessages.innerHTML = '';
-            
-            messages.forEach(msg => {
-                const messageElement = document.createElement('div');
-                messageElement.className = `message ${msg.isAdmin ? 'admin' : 'user'}`;
-                messageElement.innerHTML = `
-                    <div class="message-sender">${msg.user} ${msg.isAdmin ? '👑' : ''} [${msg.timestamp}]:</div>
-                    <div>${msg.text}</div>
-                `;
-                chatMessages.appendChild(messageElement);
-            });
-            
-            // Прокручиваем вниз
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-        
-        // Обработка Enter в чате
-        document.getElementById('messageInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
-        });
         
         // Проверяем авторизацию при загрузке
         window.onload = function() {
             const savedUser = localStorage.getItem('currentUser');
-            if (savedUser && users[savedUser] && !users[savedUser].banned) {
+            if (savedUser && users[savedUser]) {
                 document.getElementById('loginUsername').value = savedUser;
-                login();
+                loginUser(savedUser);
             }
         }
     </script>
 </body>
-</html>
+                </html>
