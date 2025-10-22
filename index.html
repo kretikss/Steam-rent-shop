@@ -1,1 +1,880 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steam Аренда | Kretiks</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
 
+        :root {
+            --primary: #1a1a2e;
+            --secondary: #16213e;
+            --accent: #4ecdc4;
+            --danger: #ff6b6b;
+            --text: #ffffff;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, var(--danger), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Navigation */
+        .main-nav {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: var(--text);
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn.active {
+            background: var(--accent);
+            color: var(--primary);
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Forms */
+        .form-container {
+            background: rgba(255,255,255,0.1);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--accent);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.1);
+            color: var(--text);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .btn {
+            background: linear-gradient(45deg, var(--danger), #ee5a52);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            margin: 5px 0;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.2);
+        }
+
+        /* Time Selector */
+        .time-selector {
+            text-align: center;
+        }
+
+        .price-info {
+            margin: 20px 0;
+            color: var(--accent);
+        }
+
+        .total-price {
+            margin: 30px 0;
+        }
+
+        .total-price h3 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        /* Chat */
+        .chat-widget {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .chat-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: none;
+            color: white;
+            font-size: 1.5em;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .chat-window {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            width: 350px;
+            height: 500px;
+            background: var(--secondary);
+            border-radius: 15px;
+            display: none;
+            flex-direction: column;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .chat-window.active {
+            display: flex;
+        }
+
+        .chat-header {
+            padding: 15px;
+            background: var(--primary);
+            border-radius: 15px 15px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        .chat-input {
+            padding: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--accent);
+            color: var(--primary);
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+            z-index: 1001;
+        }
+
+        /* Profile */
+        .profile-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--accent);
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            background: rgba(255,107,107,0.2);
+            border: 1px solid var(--danger);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .user-list {
+            margin: 15px 0;
+        }
+
+        .user-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            margin: 5px 0;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+        }
+
+        .ban-btn {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-nav {
+                flex-direction: column;
+            }
+            
+            .chat-window {
+                width: 300px;
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎮 Steam Аренда</h1>
+            <p>Автоматическая выдача • Поддержка 24/7</p>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="main-nav">
+            <button class="nav-btn active" data-tab="shop">🎮 Магазин</button>
+            <button class="nav-btn" data-tab="profile">⚙️ Профиль</button>
+            <button class="nav-btn" data-tab="admin" id="adminTab" style="display: none;">👑 Админка</button>
+        </nav>
+
+        <!-- Shop Tab -->
+        <div id="shop" class="tab-content active">
+            <div class="form-container">
+                <div class="time-selector">
+                    <h3>⏱ Выберите время аренды</h3>
+                    
+                    <div class="price-info">
+                        <p>💡 1 час = 5 рублей</p>
+                        <p>🎮 Минимум: 1 час | Максимум: 168 часов (неделя)</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Количество часов:</label>
+                        <input type="number" id="hoursInput" min="1" max="168" value="1">
+                    </div>
+
+                    <div class="total-price">
+                        <h3>Итого: <span id="totalAmount">5</span> рублей</h3>
+                        <p class="time-equivalent" id="timeEquivalent">(1 час)</p>
+                    </div>
+
+                    <div class="payment-instructions" id="paymentInstructions" style="display: none;">
+                        <div class="unique-comment">
+                            <p><strong>ВАШ УНИКАЛЬНЫЙ КОММЕНТАРИЙ:</strong></p>
+                            <div class="comment-code" id="uniqueComment" style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px; margin: 10px 0; font-family: monospace;"></div>
+                            <p>📌 Обязательно укажите его при переводе в QIWI!</p>
+                        </div>
+
+                        <div class="steps">
+                            <p>1. Переведите <strong id="paymentAmount">5</strong>₽ на QIWI: <strong>+7 914 328-12-18</strong></p>
+                            <p>2. В комментарии укажите: <strong id="commentDisplay"></strong></p>
+                            <p>3. Нажмите кнопку ниже после перевода</p>
+                        </div>
+
+                        <button class="btn" onclick="confirmPayment()">✅ Я ОПЛАТИЛ</button>
+                    </div>
+
+                    <button class="btn" id="proceedToPayment" onclick="showPaymentInstructions()">💳 ПЕРЕЙТИ К ОПЛАТЕ</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Tab -->
+        <div id="profile" class="tab-content">
+            <div class="form-container">
+                <div class="profile-header">
+                    <div class="avatar" id="userAvatar">
+                        <!-- Avatar will be inserted here -->
+                    </div>
+                    <h3 id="profileUsername">Гость</h3>
+                </div>
+
+                <div class="form-group">
+                    <label>Сменить никнейм:</label>
+                    <input type="text" id="newUsername" placeholder="Новый никнейм">
+                </div>
+
+                <div class="form-group">
+                    <label>Новый пароль:</label>
+                    <input type="password" id="newPassword" placeholder="Новый пароль">
+                </div>
+
+                <div class="form-group">
+                    <label>Аватарка (URL):</label>
+                    <input type="text" id="avatarUrl" placeholder="Ссылка на изображение">
+                </div>
+
+                <button class="btn" onclick="updateProfile()">💾 СОХРАНИТЬ ИЗМЕНЕНИЯ</button>
+                <button class="btn btn-secondary" onclick="logout()">🚪 ВЫЙТИ</button>
+            </div>
+        </div>
+
+        <!-- Admin Tab -->
+        <div id="admin" class="tab-content">
+            <div class="admin-panel">
+                <h3>👑 Панель администратора</h3>
+                <div class="user-list" id="userList">
+                    <!-- Users will be listed here -->
+                </div>
+                <div class="notifications-list" id="adminNotifications">
+                    <!-- Notifications will appear here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Widget -->
+    <div class="chat-widget">
+        <button class="chat-button" onclick="toggleChat()">💬</button>
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-header">
+                <span>💬 Чат поддержки</span>
+                <button onclick="toggleChat()" style="background: none; border: none; color: white; cursor: pointer;">✕</button>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <!-- Messages will appear here -->
+            </div>
+            <div class="chat-input">
+                <div class="form-group">
+                    <input type="text" id="messageInput" placeholder="Введите сообщение...">
+                </div>
+                <button class="btn" onclick="sendMessage()">📤 Отправить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
+
+    <script>
+        // Database
+        let users = JSON.parse(localStorage.getItem('steamUsers')) || {};
+        let currentUser = localStorage.getItem('currentUser') || null;
+        let messages = JSON.parse(localStorage.getItem('chatMessages')) || [];
+        let orders = JSON.parse(localStorage.getItem('orders')) || [];
+        let adminNotifications = JSON.parse(localStorage.getItem('adminNotifications')) || [];
+
+        // Admin user
+        const ADMIN_USERNAME = 'Kretiks';
+
+        // Initialize admin if not exists
+        if (!users[ADMIN_USERNAME]) {
+            users[ADMIN_USERNAME] = {
+                password: 'admin123',
+                isAdmin: true,
+                banned: false,
+                avatar: null
+            };
+            localStorage.setItem('steamUsers', JSON.stringify(users));
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            updatePrice();
+            loadChatMessages();
+            
+            if (currentUser && users[currentUser] && !users[currentUser].banned) {
+                showUserInterface();
+            } else {
+                showLoginForm();
+            }
+        };
+
+        // Price calculation
+        function updatePrice() {
+            const hours = parseInt(document.getElementById('hoursInput').value) || 1;
+            const amount = hours * 5;
+            
+            document.getElementById('totalAmount').textContent = amount;
+            document.getElementById('paymentAmount').textContent = amount;
+            document.getElementById('timeEquivalent').textContent = `(${hours} час${getRussianPlural(hours)})`;
+        }
+
+        function getRussianPlural(number) {
+            if (number % 10 === 1 && number % 100 !== 11) return '';
+            if ([2,3,4].includes(number % 10) && ![12,13,14].includes(number % 100)) return 'а';
+            return 'ов';
+        }
+
+        // Payment system
+        function showPaymentInstructions() {
+            if (!currentUser) {
+                showNotification('Сначала войдите в систему!');
+                showLoginForm();
+                return;
+            }
+
+            const hours = parseInt(document.getElementById('hoursInput').value) || 1;
+            const amount = hours * 5;
+            const comment = generateUniqueComment(currentUser, hours);
+
+            document.getElementById('uniqueComment').textContent = comment;
+            document.getElementById('commentDisplay').textContent = comment;
+            document.getElementById('paymentInstructions').style.display = 'block';
+            document.getElementById('proceedToPayment').style.display = 'none';
+        }
+
+        function generateUniqueComment(username, hours) {
+            const randomCode = Math.random().toString(36).substring(2, 6).toUpperCase();
+            return `KRET-${hours}H-${randomCode}`;
+        }
+
+        function confirmPayment() {
+            const hours = parseInt(document.getElementById('hoursInput').value) || 1;
+            const amount = hours * 5;
+            const comment = document.getElementById('uniqueComment').textContent;
+
+            const order = {
+                id: Date.now(),
+                user: currentUser,
+                hours: hours,
+                amount: amount,
+                comment: comment,
+                status: 'pending',
+                date: new Date().toLocaleString()
+            };
+
+            orders.push(order);
+            localStorage.setItem('orders', JSON.stringify(orders));
+
+            // Notify admin
+            notifyAdmin(order);
+
+            showNotification('✅ Заявка принята! Ожидайте подтверждения оплаты.');
+            document.getElementById('paymentInstructions').style.display = 'none';
+            document.getElementById('proceedToPayment').style.display = 'block';
+        }
+
+        function notifyAdmin(order) {
+            const notification = {
+                id: order.id,
+                type: 'new_payment',
+                message: `💰 НОВАЯ ОПЛАТА!\n👤 ${order.user}\n⏱ ${order.hours} часов\n💵 ${order.amount} руб\n📝 ${order.comment}\n📅 ${order.date}`,
+                timestamp: new Date().toLocaleString(),
+                read: false
+            };
+
+            adminNotifications.push(notification);
+            localStorage.setItem('adminNotifications', JSON.stringify(adminNotifications));
+
+            // Show notification if admin is online
+            if (currentUser === ADMIN_USERNAME) {
+                showAdminNotification(notification.message);
+            }
+        }
+
+        // User system
+        function showLoginForm() {
+            const loginHTML = `
+                <div class="form-container">
+                    <h3>🔐 Вход в систему</h3>
+                    <div class="form-group">
+                        <label>Никнейм:</label>
+                        <input type="text" id="loginUsername" placeholder="Ваш никнейм">
+                    </div>
+                    <div class="form-group">
+                        <label>Пароль:</label>
+                        <input type="password" id="loginPassword" placeholder="Ваш пароль">
+                    </div>
+                    <button class="btn" onclick="login()">🚀 ВОЙТИ</button>
+                    <button class="btn btn-secondary" onclick="showRegisterForm()">📝 РЕГИСТРАЦИЯ</button>
+                </div>
+            `;
+            document.getElementById('shop').innerHTML = loginHTML;
+        }
+
+        function showRegisterForm() {
+            const registerHTML = `
+                <div class="form-container">
+                    <h3>📝 Регистрация</h3>
+                    <div class="form-group">
+                        <label>Никнейм:</label>
+                        <input type="text" id="regUsername" placeholder="Придумайте никнейм">
+                    </div>
+                    <div class="form-group">
+                        <label>Пароль:</label>
+                        <input type="password" id="regPassword" placeholder="Придумайте пароль">
+                    </div>
+                    <button class="btn" onclick="register()">🎉 ЗАРЕГИСТРИРОВАТЬСЯ</button>
+                    <button class="btn btn-secondary" onclick="showLoginForm()">🔐 УЖЕ ЕСТЬ АККАУНТ</button>
+                </div>
+            `;
+            document.getElementById('shop').innerHTML = registerHTML;
+        }
+
+        function register() {
+            const username = document.getElementById('regUsername').value.trim();
+            const password = document.getElementById('regPassword').value;
+
+            if (!username || !password) {
+                showNotification('Заполните все поля!');
+                return;
+            }
+
+            if (users[username]) {
+                showNotification('Этот никнейм уже занят!');
+                return;
+            }
+
+            users[username] = {
+                password: password,
+                isAdmin: false,
+                banned: false,
+                avatar: null
+            };
+
+            localStorage.setItem('steamUsers', JSON.stringify(users));
+            showNotification('✅ Регистрация успешна!');
+            showLoginForm();
+        }
+
+        function login() {
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            if (!users[username]) {
+                showNotification('Пользователь не найден!');
+                return;
+            }
+
+            if (users[username].banned) {
+                showNotification('Ваш аккаунт заблокирован!');
+                return;
+            }
+
+            if (users[username].password !== password) {
+                showNotification('Неверный пароль!');
+                return;
+            }
+
+            currentUser = username;
+            localStorage.setItem('currentUser', username);
+            showUserInterface();
+            showNotification(`✅ Добро пожаловать, ${username}!`);
+        }
+
+        function showUserInterface() {
+            document.getElementById('shop').innerHTML = `
+                <div class="form-container">
+                    <div class="time-selector">
+                        <h3>⏱ Выберите время аренды</h3>
+                        
+                        <div class="price-info">
+                            <p>💡 1 час = 5 рублей</p>
+                            <p>🎮 Минимум: 1 час | Максимум: 168 часов (неделя)</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Количество часов:</label>
+                            <input type="number" id="hoursInput" min="1" max="168" value="1" oninput="updatePrice()">
+                        </div>
+
+                        <div class="total-price">
+                            <h3>Итого: <span id="totalAmount">5</span> рублей</h3>
+                            <p class="time-equivalent" id="timeEquivalent">(1 час)</p>
+                        </div>
+
+                        <div class="payment-instructions" id="paymentInstructions" style="display: none;">
+                            <div class="unique-comment">
+                                <p><strong>ВАШ УНИКАЛЬНЫЙ КОММЕНТАРИЙ:</strong></p>
+                                <div class="comment-code" id="uniqueComment" style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px; margin: 10px 0; font-family: monospace;"></div>
+                                <p>📌 Обязательно укажите его при переводе в QIWI!</p>
+                            </div>
+
+                            <div class="steps">
+                                <p>1. Переведите <strong id="paymentAmount">5</strong>₽ на QIWI: <strong>+7 914 328-12-18</strong></p>
+                                <p>2. В комментарии укажите: <strong id="commentDisplay"></strong></p>
+                                <p>3. Нажмите кнопку ниже после перевода</p>
+                            </div>
+
+                            <button class="btn" onclick="confirmPayment()">✅ Я ОПЛАТИЛ</button>
+                        </div>
+
+                        <button class="btn" id="proceedToPayment" onclick="showPaymentInstructions()">💳 ПЕРЕЙТИ К ОПЛАТЕ</button>
+                    </div>
+                </div>
+            `;
+
+            // Update profile display
+            updateProfileDisplay();
+
+            // Show admin tab if user is admin
+            if (users[currentUser].isAdmin) {
+                document.getElementById('adminTab').style.display = 'block';
+                updateAdminPanel();
+            }
+
+            updatePrice();
+        }
+
+        function updateProfileDisplay() {
+            const user = users[currentUser];
+            document.getElementById('profileUsername').textContent = currentUser;
+            
+            // Update avatar
+            const avatarElement = document.getElementById('userAvatar');
+            if (user.avatar) {
+                avatarElement.innerHTML = `<img src="${user.avatar}" alt="Avatar" onerror="this.style.display='none'">`;
+            } else {
+                const firstLetter = currentUser.charAt(0).toUpperCase();
+                avatarElement.textContent = firstLetter;
+                avatarElement.style.background = getAvatarColor(currentUser);
+            }
+
+            // Fill form fields
+            document.getElementById('newUsername').value = currentUser;
+        }
+
+        function getAvatarColor(username) {
+            const colors = ['#4ecdc4', '#ff6b6b', '#45b7d1', '#96ceb4', '#feca57', '#ff9ff3'];
+            const index = username.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+            return colors[index % colors.length];
+        }
+
+        function updateProfile() {
+            const newUsername = document.getElementById('newUsername').value.trim();
+            const newPassword = document.getElementById('newPassword').value;
+            const avatarUrl = document.getElementById('avatarUrl').value.trim();
+
+            if (newUsername && newUsername !== currentUser) {
+                if (users[newUsername]) {
+                    showNotification('Этот никнейм уже занят!');
+                    return;
+                }
+                
+                // Update username
+                users[newUsername] = users[currentUser];
+                delete users[currentUser];
+                currentUser = newUsername;
+                localStorage.setItem('currentUser', newUsername);
+            }
+
+            if (newPassword) {
+                users[currentUser].password = newPassword;
+            }
+
+            if (avatarUrl) {
+                users[currentUser].avatar = avatarUrl;
+            }
+
+            localStorage.setItem('steamUsers', JSON.stringify(users));
+            updateProfileDisplay();
+            showNotification('✅ Профиль обновлен!');
+        }
+
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('currentUser');
+            showLoginForm();
+            showNotification('👋 До свидания!');
+        }
+
+        // Chat system
+        function toggleChat() {
+            const chatWindow = document.getElementById('chatWindow');
+            chatWindow.classList.toggle('active');
+        }
+
+        function loadChatMessages() {
+            const chatMessages = document.getElementById('chatMessages');
+            chatMessages.innerHTML = messages.map(msg => `
+                <div class="message" style="margin-bottom: 10px; padding: 8px; background: rgba(255,255,255,0.1); border-radius: 8px;">
+                    <strong>${msg.user}:</strong> ${msg.text}
+                </div>
+            `).join('');
+        }
+
+        function sendMessage() {
+            if (!currentUser) {
+                showNotification('Сначала войдите в систему!');
+                return;
+            }
+
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value.trim();
+
+            if (!message) return;
+
+            messages.push({
+                user: currentUser,
+                text: message,
+                timestamp: new Date().toLocaleString()
+            });
+
+            localStorage.setItem('chatMessages', JSON.stringify(messages));
+            loadChatMessages();
+            messageInput.value = '';
+
+            // Auto-scroll to bottom
+            const chatMessages = document.getElementById('chatMessages');
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Admin functions
+        function updateAdminPanel() {
+            if (!users[currentUser]?.isAdmin) return;
+
+            const userList = document.getElementById('userList');
+            userList.innerHTML = '';
+
+            Object.keys(users).forEach(username => {
+                if (username === ADMIN_USERNAME) return;
+                
+                const user = users[username];
+                const userItem = document.createElement('div');
+                userItem.className = 'user-item';
+                userItem.innerHTML = `
+                    <span>${username} ${user.banned ? '🔴' : '🟢'}</span>
+                    <button class="ban-btn" onclick="toggleBan('${username}')">
+                        ${user.banned ? 'Разбанить' : 'Забанить'}
+                    </button>
+                `;
+                userList.appendChild(userItem);
+            });
+
+            // Show notifications
+            const notificationsElement = document.getElementById('adminNotifications');
+            const unreadNotifications = adminNotifications.filter(n => !n.read);
+            
+            if (unreadNotifications.length > 0) {
+                notificationsElement.innerHTML = `
+                    <h4>🔔 Уведомления (${unreadNotifications.length})</h4>
+                    ${unreadNotifications.map(notif => `
+                        <div style="background: rgba(255,255,255,0.1); padding: 10px; margin: 5px 0; border-radius: 8px;">
+                            <strong>${notif.timestamp}</strong><br>
+                            ${notif.message.replace(/\n/g, '<br>')}
+                        </div>
+                    `).join('')}
+                    <button class="btn" onclick="markNotificationsAsRead()">Отметить как прочитанные</button>
+                `;
+            }
+        }
+
+        function toggleBan(username) {
+            if (!users[currentUser]?.isAdmin) return;
+
+            users[username].banned = !users[username].banned;
+            localStorage.setItem('steamUsers', JSON.stringify(users));
+            updateAdminPanel();
+            showNotification(`Пользователь ${username} ${users[username].banned ? 'забанен' : 'разбанен'}`);
+        }
+
+        function markNotificationsAsRead() {
+            adminNotifications.forEach(notif => notif.read = true);
+            localStorage.setItem('adminNotifications', JSON.stringify(adminNotifications));
+            updateAdminPanel();
+        }
+
+        function showAdminNotification(message) {
+            showNotification(`🔔 ${message}`);
+        }
+
+        // Utility functions
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 5000);
+        }
+
+        // Tab navigation
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove active class from all buttons and tabs
+                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+                
+                // Add active class to clicked button and corresponding tab
+                this.classList.add('active');
+                const tabId = this.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        // Enter key for chat
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const messageInput = document.getElementById('messageInput');
+                if (messageInput && messageInput === document.activeElement) {
+                    sendMessage();
+                }
+            }
+        });
+    </script>
+</body>
+              </html>
