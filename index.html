@@ -134,6 +134,10 @@
             background: rgba(255,255,255,0.2);
         }
 
+        .btn-success {
+            background: var(--accent);
+        }
+
         /* Time Selector */
         .time-selector {
             text-align: center;
@@ -153,61 +157,32 @@
             margin-bottom: 10px;
         }
 
-        /* Chat */
-        .chat-widget {
+        /* Telegram Widget */
+        .telegram-widget {
             position: fixed;
             bottom: 20px;
             right: 20px;
             z-index: 1000;
         }
 
-        .chat-button {
+        .telegram-btn {
+            display: block;
             width: 60px;
             height: 60px;
             border-radius: 50%;
-            background: var(--accent);
-            border: none;
+            background: #0088cc;
             color: white;
-            font-size: 1.5em;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
-
-        .chat-window {
-            position: absolute;
-            bottom: 70px;
-            right: 0;
-            width: 350px;
-            height: 500px;
-            background: var(--secondary);
-            border-radius: 15px;
-            display: none;
-            flex-direction: column;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-
-        .chat-window.active {
+            text-decoration: none;
             display: flex;
-        }
-
-        .chat-header {
-            padding: 15px;
-            background: var(--primary);
-            border-radius: 15px 15px 0 0;
-            display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
         }
 
-        .chat-messages {
-            flex: 1;
-            padding: 15px;
-            overflow-y: auto;
-        }
-
-        .chat-input {
-            padding: 15px;
-            border-top: 1px solid rgba(255,255,255,0.1);
+        .telegram-btn:hover {
+            transform: scale(1.1);
         }
 
         /* Notifications */
@@ -221,6 +196,7 @@
             border-radius: 10px;
             display: none;
             z-index: 1001;
+            max-width: 400px;
         }
 
         /* Profile */
@@ -259,27 +235,114 @@
             margin-bottom: 20px;
         }
 
-        .user-list {
+        .orders-list {
             margin: 15px 0;
         }
 
-        .user-item {
+        .order-item {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .order-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .order-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .status-pending {
+            color: #f39c12;
+        }
+
+        .status-completed {
+            color: #27ae60;
+        }
+
+        .status-cancelled {
+            color: #e74c3c;
+        }
+
+        /* Chat Modal */
+        .chat-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--secondary);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 15px;
+            padding: 20px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            display: none;
+            z-index: 1002;
+        }
+
+        .chat-modal.active {
+            display: block;
+        }
+
+        .chat-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .chat-messages {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 15px;
             padding: 10px;
-            margin: 5px 0;
-            background: rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.3);
             border-radius: 8px;
         }
 
-        .ban-btn {
-            background: var(--danger);
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
+        .message {
+            margin-bottom: 10px;
+            padding: 8px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .message.admin {
+            background: rgba(78,205,196,0.3);
+            border-left: 3px solid var(--accent);
+        }
+
+        .message.user {
+            background: rgba(255,255,255,0.1);
+            border-left: 3px solid var(--danger);
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            z-index: 1001;
+        }
+
+        .overlay.active {
+            display: block;
         }
 
         /* Responsive */
@@ -288,9 +351,15 @@
                 flex-direction: column;
             }
             
-            .chat-window {
-                width: 300px;
-                height: 400px;
+            .order-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .order-actions {
+                width: 100%;
+                justify-content: space-between;
             }
         }
     </style>
@@ -344,6 +413,12 @@
                         </div>
 
                         <button class="btn" onclick="confirmPayment()">✅ Я ОПЛАТИЛ</button>
+                        <div class="support-links" style="margin-top: 20px; text-align: center;">
+                            <p>По вопросам оплаты:</p>
+                            <a href="https://t.me/+cP9LXn9XoVlhZjMy" target="_blank" class="btn btn-secondary">
+                                💬 Написать в поддержку
+                            </a>
+                        </div>
                     </div>
 
                     <button class="btn" id="proceedToPayment" onclick="showPaymentInstructions()">💳 ПЕРЕЙТИ К ОПЛАТЕ</button>
@@ -385,35 +460,45 @@
         <div id="admin" class="tab-content">
             <div class="admin-panel">
                 <h3>👑 Панель администратора</h3>
-                <div class="user-list" id="userList">
-                    <!-- Users will be listed here -->
+                
+                <div class="orders-list" id="ordersList">
+                    <!-- Orders will be listed here -->
                 </div>
-                <div class="notifications-list" id="adminNotifications">
-                    <!-- Notifications will appear here -->
+
+                <div class="admin-stats">
+                    <h4>📊 Статистика</h4>
+                    <p>Всего заказов: <span id="totalOrders">0</span></p>
+                    <p>Ожидают подтверждения: <span id="pendingOrders">0</span></p>
+                    <p>Завершено: <span id="completedOrders">0</span></p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Chat Widget -->
-    <div class="chat-widget">
-        <button class="chat-button" onclick="toggleChat()">💬</button>
-        <div class="chat-window" id="chatWindow">
-            <div class="chat-header">
-                <span>💬 Чат поддержки</span>
-                <button onclick="toggleChat()" style="background: none; border: none; color: white; cursor: pointer;">✕</button>
-            </div>
-            <div class="chat-messages" id="chatMessages">
-                <!-- Messages will appear here -->
-            </div>
-            <div class="chat-input">
-                <div class="form-group">
-                    <input type="text" id="messageInput" placeholder="Введите сообщение...">
-                </div>
-                <button class="btn" onclick="sendMessage()">📤 Отправить</button>
-            </div>
-        </div>
+    <!-- Telegram Widget -->
+    <div class="telegram-widget">
+        <a href="https://t.me/+cP9LXn9XoVlhZjMy" target="_blank" class="telegram-btn" title="Чат поддержки">
+            💬
+        </a>
     </div>
+
+    <!-- Chat Modal -->
+    <div class="chat-modal" id="chatModal">
+        <div class="chat-header">
+            <h4 id="chatWithUser">Чат с пользователем</h4>
+            <button onclick="closeChat()" style="background: none; border: none; color: white; cursor: pointer; font-size: 1.2em;">✕</button>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <!-- Chat messages will appear here -->
+        </div>
+        <div class="form-group">
+            <input type="text" id="chatMessageInput" placeholder="Введите сообщение...">
+        </div>
+        <button class="btn" onclick="sendChatMessage()">📤 Отправить</button>
+    </div>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay" onclick="closeChat()"></div>
 
     <!-- Notification -->
     <div class="notification" id="notification"></div>
@@ -422,9 +507,9 @@
         // Database
         let users = JSON.parse(localStorage.getItem('steamUsers')) || {};
         let currentUser = localStorage.getItem('currentUser') || null;
-        let messages = JSON.parse(localStorage.getItem('chatMessages')) || [];
         let orders = JSON.parse(localStorage.getItem('orders')) || [];
-        let adminNotifications = JSON.parse(localStorage.getItem('adminNotifications')) || [];
+        let chats = JSON.parse(localStorage.getItem('chats')) || {};
+        let currentChatWith = null;
 
         // Admin user
         const ADMIN_USERNAME = 'Kretiks';
@@ -443,7 +528,6 @@
         // Initialize on load
         window.onload = function() {
             updatePrice();
-            loadChatMessages();
             
             if (currentUser && users[currentUser] && !users[currentUser].banned) {
                 showUserInterface();
@@ -503,35 +587,34 @@
                 amount: amount,
                 comment: comment,
                 status: 'pending',
-                date: new Date().toLocaleString()
+                date: new Date().toLocaleString(),
+                chat: []
             };
 
             orders.push(order);
             localStorage.setItem('orders', JSON.stringify(orders));
 
-            // Notify admin
-            notifyAdmin(order);
+            // Initialize chat for this order
+            if (!chats[currentUser]) {
+                chats[currentUser] = [];
+            }
+            chats[currentUser].push({
+                orderId: order.id,
+                messages: [{
+                    user: 'system',
+                    text: `Заказ создан. Код: ${comment}, Сумма: ${amount} руб`,
+                    timestamp: new Date().toLocaleString()
+                }]
+            });
+            localStorage.setItem('chats', JSON.stringify(chats));
 
             showNotification('✅ Заявка принята! Ожидайте подтверждения оплаты.');
             document.getElementById('paymentInstructions').style.display = 'none';
             document.getElementById('proceedToPayment').style.display = 'block';
-        }
 
-        function notifyAdmin(order) {
-            const notification = {
-                id: order.id,
-                type: 'new_payment',
-                message: `💰 НОВАЯ ОПЛАТА!\n👤 ${order.user}\n⏱ ${order.hours} часов\n💵 ${order.amount} руб\n📝 ${order.comment}\n📅 ${order.date}`,
-                timestamp: new Date().toLocaleString(),
-                read: false
-            };
-
-            adminNotifications.push(notification);
-            localStorage.setItem('adminNotifications', JSON.stringify(adminNotifications));
-
-            // Show notification if admin is online
-            if (currentUser === ADMIN_USERNAME) {
-                showAdminNotification(notification.message);
+            // Update admin panel if admin is viewing
+            if (users[currentUser]?.isAdmin) {
+                updateAdminPanel();
             }
         }
 
@@ -660,6 +743,12 @@
                             </div>
 
                             <button class="btn" onclick="confirmPayment()">✅ Я ОПЛАТИЛ</button>
+                            <div class="support-links" style="margin-top: 20px; text-align: center;">
+                                <p>По вопросам оплаты:</p>
+                                <a href="https://t.me/+cP9LXn9XoVlhZjMy" target="_blank" class="btn btn-secondary">
+                                    💬 Написать в поддержку
+                                </a>
+                            </div>
                         </div>
 
                         <button class="btn" id="proceedToPayment" onclick="showPaymentInstructions()">💳 ПЕРЕЙТИ К ОПЛАТЕ</button>
@@ -741,104 +830,147 @@
             showNotification('👋 До свидания!');
         }
 
-        // Chat system
-        function toggleChat() {
-            const chatWindow = document.getElementById('chatWindow');
-            chatWindow.classList.toggle('active');
-        }
+        // Admin functions
+        function updateAdminPanel() {
+            if (!users[currentUser]?.isAdmin) return;
 
-        function loadChatMessages() {
-            const chatMessages = document.getElementById('chatMessages');
-            chatMessages.innerHTML = messages.map(msg => `
-                <div class="message" style="margin-bottom: 10px; padding: 8px; background: rgba(255,255,255,0.1); border-radius: 8px;">
-                    <strong>${msg.user}:</strong> ${msg.text}
-                </div>
-            `).join('');
-        }
+            const ordersList = document.getElementById('ordersList');
+            const pendingOrders = orders.filter(order => order.status === 'pending');
+            const completedOrders = orders.filter(order => order.status === 'completed');
 
-        function sendMessage() {
-            if (!currentUser) {
-                showNotification('Сначала войдите в систему!');
+            ordersList.innerHTML = '';
+
+            if (orders.length === 0) {
+                ordersList.innerHTML = '<p>Пока нет заказов</p>';
                 return;
             }
 
-            const messageInput = document.getElementById('messageInput');
+            orders.forEach(order => {
+                const orderItem = document.createElement('div');
+                orderItem.className = 'order-item';
+                orderItem.innerHTML = `
+                    <div class="order-header">
+                        <strong>👤 ${order.user}</strong>
+                        <span class="status-${order.status}">${getStatusText(order.status)}</span>
+                    </div>
+                    <div>
+                        <p>💰 ${order.amount} руб | ⏱ ${order.hours} часов</p>
+                        <p>📝 ${order.comment}</p>
+                        <p>📅 ${order.date}</p>
+                    </div>
+                    <div class="order-actions">
+                        <button class="btn btn-success" onclick="openChat('${order.user}', ${order.id})">
+                            💬 Чат
+                        </button>
+                        ${order.status === 'pending' ? `
+                            <button class="btn" onclick="updateOrderStatus(${order.id}, 'completed')">
+                                ✅ Подтвердить
+                            </button>
+                            <button class="btn btn-secondary" onclick="updateOrderStatus(${order.id}, 'cancelled')">
+                                ❌ Отклонить
+                            </button>
+                        ` : ''}
+                    </div>
+                `;
+                ordersList.appendChild(orderItem);
+            });
+
+            // Update stats
+            document.getElementById('totalOrders').textContent = orders.length;
+            document.getElementById('pendingOrders').textContent = pendingOrders.length;
+            document.getElementById('completedOrders').textContent = completedOrders.length;
+        }
+
+        function getStatusText(status) {
+            const statusMap = {
+                'pending': '⏳ Ожидает',
+                'completed': '✅ Подтверждено',
+                'cancelled': '❌ Отклонено'
+            };
+            return statusMap[status] || status;
+        }
+
+        function updateOrderStatus(orderId, newStatus) {
+            const order = orders.find(o => o.id === orderId);
+            if (order) {
+                order.status = newStatus;
+                localStorage.setItem('orders', JSON.stringify(orders));
+                updateAdminPanel();
+                showNotification(`Статус заказа обновлен на: ${getStatusText(newStatus)}`);
+            }
+        }
+
+        // Chat system
+        function openChat(username, orderId) {
+            currentChatWith = { username, orderId };
+            document.getElementById('chatWithUser').textContent = `Чат с ${username} (Заказ #${orderId})`;
+            
+            // Load chat messages
+            loadChatMessages(username, orderId);
+            
+            // Show modal
+            document.getElementById('chatModal').classList.add('active');
+            document.getElementById('overlay').classList.add('active');
+        }
+
+        function closeChat() {
+            document.getElementById('chatModal').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+            currentChatWith = null;
+        }
+
+        function loadChatMessages(username, orderId) {
+            const chatMessages = document.getElementById('chatMessages');
+            const userChats = chats[username] || [];
+            const orderChat = userChats.find(chat => chat.orderId === orderId);
+            
+            if (!orderChat) {
+                chatMessages.innerHTML = '<p>Нет сообщений</p>';
+                return;
+            }
+
+            chatMessages.innerHTML = orderChat.messages.map(msg => `
+                <div class="message ${msg.user === 'system' ? 'admin' : msg.user === currentUser ? 'admin' : 'user'}">
+                    <strong>${msg.user === 'system' ? '🤖 Система' : msg.user}:</strong> ${msg.text}
+                    <div style="font-size: 0.8em; opacity: 0.7;">${msg.timestamp}</div>
+                </div>
+            `).join('');
+
+            // Auto-scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function sendChatMessage() {
+            if (!currentChatWith || !currentUser) return;
+
+            const messageInput = document.getElementById('chatMessageInput');
             const message = messageInput.value.trim();
 
             if (!message) return;
 
-            messages.push({
+            const { username, orderId } = currentChatWith;
+            
+            // Initialize chat if not exists
+            if (!chats[username]) {
+                chats[username] = [];
+            }
+
+            let orderChat = chats[username].find(chat => chat.orderId === orderId);
+            if (!orderChat) {
+                orderChat = { orderId, messages: [] };
+                chats[username].push(orderChat);
+            }
+
+            // Add message
+            orderChat.messages.push({
                 user: currentUser,
                 text: message,
                 timestamp: new Date().toLocaleString()
             });
 
-            localStorage.setItem('chatMessages', JSON.stringify(messages));
-            loadChatMessages();
+            localStorage.setItem('chats', JSON.stringify(chats));
+            loadChatMessages(username, orderId);
             messageInput.value = '';
-
-            // Auto-scroll to bottom
-            const chatMessages = document.getElementById('chatMessages');
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        // Admin functions
-        function updateAdminPanel() {
-            if (!users[currentUser]?.isAdmin) return;
-
-            const userList = document.getElementById('userList');
-            userList.innerHTML = '';
-
-            Object.keys(users).forEach(username => {
-                if (username === ADMIN_USERNAME) return;
-                
-                const user = users[username];
-                const userItem = document.createElement('div');
-                userItem.className = 'user-item';
-                userItem.innerHTML = `
-                    <span>${username} ${user.banned ? '🔴' : '🟢'}</span>
-                    <button class="ban-btn" onclick="toggleBan('${username}')">
-                        ${user.banned ? 'Разбанить' : 'Забанить'}
-                    </button>
-                `;
-                userList.appendChild(userItem);
-            });
-
-            // Show notifications
-            const notificationsElement = document.getElementById('adminNotifications');
-            const unreadNotifications = adminNotifications.filter(n => !n.read);
-            
-            if (unreadNotifications.length > 0) {
-                notificationsElement.innerHTML = `
-                    <h4>🔔 Уведомления (${unreadNotifications.length})</h4>
-                    ${unreadNotifications.map(notif => `
-                        <div style="background: rgba(255,255,255,0.1); padding: 10px; margin: 5px 0; border-radius: 8px;">
-                            <strong>${notif.timestamp}</strong><br>
-                            ${notif.message.replace(/\n/g, '<br>')}
-                        </div>
-                    `).join('')}
-                    <button class="btn" onclick="markNotificationsAsRead()">Отметить как прочитанные</button>
-                `;
-            }
-        }
-
-        function toggleBan(username) {
-            if (!users[currentUser]?.isAdmin) return;
-
-            users[username].banned = !users[username].banned;
-            localStorage.setItem('steamUsers', JSON.stringify(users));
-            updateAdminPanel();
-            showNotification(`Пользователь ${username} ${users[username].banned ? 'забанен' : 'разбанен'}`);
-        }
-
-        function markNotificationsAsRead() {
-            adminNotifications.forEach(notif => notif.read = true);
-            localStorage.setItem('adminNotifications', JSON.stringify(adminNotifications));
-            updateAdminPanel();
-        }
-
-        function showAdminNotification(message) {
-            showNotification(`🔔 ${message}`);
         }
 
         // Utility functions
@@ -869,12 +1001,12 @@
         // Enter key for chat
         document.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
-                const messageInput = document.getElementById('messageInput');
-                if (messageInput && messageInput === document.activeElement) {
-                    sendMessage();
+                const chatMessageInput = document.getElementById('chatMessageInput');
+                if (chatMessageInput && chatMessageInput === document.activeElement) {
+                    sendChatMessage();
                 }
             }
         });
     </script>
 </body>
-              </html>
+    </html>
